@@ -19,6 +19,18 @@ import InsertChartOutlinedIcon from '@mui/icons-material/InsertChartOutlined';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
 import Popup from '../../../components/Popup';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  Stack,
+  Divider
+} from '@mui/material';
+import PersonIcon from '@mui/icons-material/Person';
+import BadgeIcon from '@mui/icons-material/Badge';
+import ClassIcon from '@mui/icons-material/Class';
+import SchoolIcon from '@mui/icons-material/School';
+
 
 const ViewStudent = () => {
     const [showTab, setShowTab] = useState(false);
@@ -339,28 +351,116 @@ const ViewStudent = () => {
         )
     }
 
-    const StudentDetailsSection = () => {
-        return (
-            <div>
-                Name: {userDetails.name}
-                <br />
+    // const StudentDetailsSection = () => {
+    //     return (
+    //         <div>
+    //             Name: {userDetails.name}
+    //             <br />
+    //             Roll Number: {userDetails.rollNum}
+    //             <br />
+    //             Class: {sclassName.sclassName}
+    //             <br />
+    //             School: {studentSchool.schoolName}
+    //             {
+    //                 subjectAttendance && Array.isArray(subjectAttendance) && subjectAttendance.length > 0 && (
+    //                     <CustomPieChart data={chartData} />
+    //                 )
+    //             }
+    //             <Button variant="contained" sx={styles.styledButton} onClick={deleteHandler}>
+    //                 Delete
+    //             </Button>
+    //             <br />
+    //         </div>
+    //     )
+    // }
+   
+const StudentDetailsSection = () => {
+  return (
+    <Box sx={{ display: 'flex', justifyContent: 'center', mt: 5 }}>
+      <Card
+        sx={{
+          width: 500,
+          borderRadius: 3,
+          boxShadow: 5,
+          overflow: 'hidden',
+        }}
+      >
+        <CardHeader
+          avatar={
+            <PersonIcon
+              sx={{ color: 'white', fontSize: 40 }}
+            />
+          }
+          title={
+            <Typography variant="h5" sx={{ color: 'white', fontWeight: 'bold' }}>
+              Student Details
+            </Typography>
+          }
+          sx={{
+            background: 'linear-gradient(45deg, #43cea2 30%, #185a9d 90%)',
+            color: 'white',
+            p: 3,
+          }}
+        />
+
+        <CardContent sx={{ backgroundColor: '#f9f9f9' }}>
+          <Stack spacing={2}>
+            <Stack direction="row" spacing={2} alignItems="center">
+              <PersonIcon color="primary" />
+              <Typography variant="body1">
+                {userDetails.name}
+              </Typography>
+            </Stack>
+            <Divider />
+
+            <Stack direction="row" spacing={2} alignItems="center">
+              <BadgeIcon color="primary" />
+              <Typography variant="body1">
                 Roll Number: {userDetails.rollNum}
-                <br />
+              </Typography>
+            </Stack>
+            <Divider />
+
+            <Stack direction="row" spacing={2} alignItems="center">
+              <ClassIcon color="primary" />
+              <Typography variant="body1">
                 Class: {sclassName.sclassName}
-                <br />
+              </Typography>
+            </Stack>
+            <Divider />
+
+            <Stack direction="row" spacing={2} alignItems="center">
+              <SchoolIcon color="primary" />
+              <Typography variant="body1">
                 School: {studentSchool.schoolName}
-                {
-                    subjectAttendance && Array.isArray(subjectAttendance) && subjectAttendance.length > 0 && (
-                        <CustomPieChart data={chartData} />
-                    )
-                }
-                <Button variant="contained" sx={styles.styledButton} onClick={deleteHandler}>
-                    Delete
-                </Button>
-                <br />
-            </div>
-        )
-    }
+              </Typography>
+            </Stack>
+
+            {subjectAttendance &&
+              Array.isArray(subjectAttendance) &&
+              subjectAttendance.length > 0 && (
+                <Box sx={{ mt: 3 }}>
+                  <CustomPieChart data={chartData} />
+                </Box>
+              )}
+
+            <Box sx={{ textAlign: 'center', mt: 3 }}>
+              <Button
+                variant="contained"
+                color="error"
+                startIcon={<DeleteIcon />}
+                onClick={deleteHandler}
+              >
+                Delete
+              </Button>
+            </Box>
+          </Stack>
+        </CardContent>
+      </Card>
+    </Box>
+  );
+};
+
 
     return (
         <>

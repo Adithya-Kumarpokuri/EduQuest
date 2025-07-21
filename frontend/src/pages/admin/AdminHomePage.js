@@ -11,6 +11,7 @@ import { useEffect } from 'react';
 import { getAllSclasses } from '../../redux/sclassRelated/sclassHandle';
 import { getAllStudents } from '../../redux/studentRelated/studentHandle';
 import { getAllTeachers } from '../../redux/teacherRelated/teacherHandle';
+import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 
 const AdminHomePage = () => {
     const dispatch = useDispatch();
@@ -69,7 +70,13 @@ const AdminHomePage = () => {
                             <Title>
                                 Fees Collection
                             </Title>
-                            <Data start={0} end={23000} duration={2.5} prefix="$" />                        </StyledPaper>
+                           <Data
+                           start={0}
+                           end={50000}
+                           duration={1.5}
+                           prefix="₹ "
+                        />                       
+                    </StyledPaper>
                     </Grid>
                     <Grid item xs={12} md={12} lg={12}>
                         <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>

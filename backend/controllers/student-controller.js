@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const Student = require('../models/studentSchema.js');
 const Subject = require('../models/subjectSchema.js');
-
+const Admin=require('../models/adminSchema.js');
 const studentRegister = async (req, res) => {
     try {
         const salt = await bcrypt.genSalt(10);
@@ -33,31 +33,111 @@ const studentRegister = async (req, res) => {
     }
 };
 
+// const studentLogIn = async (req, res) => {
+//     try {
+//         let student = await Student.findOne({ rollNum: req.body.rollNum, name: req.body.studentName });
+//         if (student) {
+//             const validated = await bcrypt.compare(req.body.password, student.password);
+//             if (validated) {
+//                 student = await student.populate("school", "schoolName")
+//                 student = await student.populate("sclassName", "sclassName")
+//                 student.password = undefined;
+//                 student.examResult = undefined;
+//                 student.attendance = undefined;
+//                 res.send(student);
+//             } else {
+                
+//                 res.send({ message: "Invalid password" });
+//             }
+//         } else {
+//             res.send({ message: "Student not found" });
+//         }
+//     } catch (err) {
+//         res.status(500).json(err);
+//     }
+// };
+// const studentLogIn = async (req, res) => {
+//     try {
+//         let student = await Student.findOne({
+//             rollNum: req.body.rollNum,
+//             name: req.body.studentName
+//         }).populate({
+//             path: "school",
+//             match: { schoolName: req.body.schoolName },
+//             select: "schoolName"
+//         });
+
+//         // Either no student found or school name mismatch
+//         if (!student || !student.school) {
+//             return res.send({ message: "Student not found or school mismatch" });
+//         }
+
+//         const validated = await bcrypt.compare(req.body.password, student.password);
+//         if (!validated) {
+//             return res.send({ message: "Invalid password" });
+//         }
+
+//         await student.populate("sclassName", "sclassName");
+
+//         student = student.toObject();
+//         delete student.password;
+//         delete student.examResult;
+//         delete student.attendance;
+
+//         res.send(student);
+
+//     } catch (err) {
+//         res.status(500).json({ message: "Login failed", error: err.message });
+//     }
+// };
 const studentLogIn = async (req, res) => {
     try {
-        let student = await Student.findOne({ rollNum: req.body.rollNum, name: req.body.studentName });
-        if (student) {
-            const validated = await bcrypt.compare(req.body.password, student.password);
-            if (validated) {
-                student = await student.populate("school", "schoolName")
-                student = await student.populate("sclassName", "sclassName")
-                student.password = undefined;
-                student.examResult = undefined;
-                student.attendance = undefined;
-                res.send(student);
-            } else {
-                
-                res.send({ message: "Invalid password" });
-            }
-        } else {
-            res.send({ message: "Student not found" });
+        const { rollNum, studentName,schoolName,password} = req.body;
+
+        // 1. Find the school by its name
+        const school = await Admin.findOne({ schoolName });
+        if (!school) {
+            return res.status(404).send({ message: "Invalid school name" });
         }
+
+        // 2. Find the student using roll number, name, and school ID
+        let student = await Student.findOne({
+            rollNum,
+            name: studentName,
+            school: school._id,
+        });
+
+        if (!student) {
+            return res.status(404).send({ message: "Student not found or school mismatch" });
+        }
+
+        // 3. Validate password
+        const isValid = await bcrypt.compare(password, student.password);
+        if (!isValid) {
+            return res.status(401).send({ message: "Invalid password" });
+        }
+
+        // 4. Populate references
+        await student.populate("school", "schoolName");
+        await student.populate("sclassName", "sclassName");
+
+        // 5. Remove sensitive fields and return response
+        student = student.toObject();
+        delete student.password;
+        delete student.examResult;
+        delete student.attendance;
+
+        res.status(200).send(student);
+
     } catch (err) {
-        res.status(500).json(err);
+        console.error("Login Error:", err);
+        res.status(500).json({ message: "Login failed", error: err.message });
     }
 };
 
+
 const getStudents = async (req, res) => {
+
     try {
         let students = await Student.find({ school: req.params.id }).populate("sclassName", "sclassName");
         if (students.length > 0) {

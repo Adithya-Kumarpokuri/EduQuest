@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import bgpic from "../assets/designlogin.jpg";
+import bgpic from "../assets/school.jpg";
 import Popup from '../components/Popup';
 import { LightPurpleButton } from '../components/buttonStyles';
 import { loginUser } from '../redux/userRelated/userHandle';
@@ -29,6 +29,7 @@ const LoginPage = ({ role }) => {
     const [passwordError, setPasswordError] = useState(false);
     const [rollNumberError, setRollNumberError] = useState(false);
     const [studentNameError, setStudentNameError] = useState(false);
+    const [schoolNameError, setSchoolNameError] = useState(false);
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -37,14 +38,16 @@ const LoginPage = ({ role }) => {
             const rollNum = event.target.rollNumber.value;
             const studentName = event.target.studentName.value;
             const password = event.target.password.value;
+            const schoolName=event.target.schoolName.value;
 
             if (!rollNum || !studentName || !password) {
                 if (!rollNum) setRollNumberError(true);
                 if (!studentName) setStudentNameError(true);
                 if (!password) setPasswordError(true);
+                if(!schoolName)setSchoolNameError(true);
                 return;
             }
-            const fields = { rollNum, studentName, password }
+            const fields = { rollNum, studentName,schoolName,password }
             setLoader(true)
             dispatch(loginUser(fields, role))
         }
@@ -71,6 +74,7 @@ const LoginPage = ({ role }) => {
         if (name === 'password') setPasswordError(false);
         if (name === 'rollNumber') setRollNumberError(false);
         if (name === 'studentName') setStudentNameError(false);
+        if (name === 'schoolName') setSchoolNameError(false);
     };
 
     const guestModeHandler = () => {
@@ -169,6 +173,19 @@ const LoginPage = ({ role }) => {
                                         autoFocus
                                         error={studentNameError}
                                         helperText={studentNameError && 'Name is required'}
+                                        onChange={handleInputChange}
+                                    />
+                                    <TextField
+                                        margin="normal"
+                                        required
+                                        fullWidth
+                                        id="schoolName"
+                                        label="Enter your schoolName"
+                                        name="schoolName"
+                                        autoComplete="off"
+                                        autoFocus
+                                        error={schoolNameError}
+                                        helperText={schoolNameError && 'SchoolName is required'}
                                         onChange={handleInputChange}
                                     />
                                 </>

@@ -1,106 +1,156 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
+import {
+  Box,
+  Paper,
+  Typography,
+  TextField,
+  Button,
+  CircularProgress,
+  Stack,
+  Divider,
+} from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getSubjectDetails } from '../../../redux/sclassRelated/sclassHandle';
 import Popup from '../../../components/Popup';
 import { registerUser } from '../../../redux/userRelated/userHandle';
 import { underControl } from '../../../redux/userRelated/userSlice';
-import { CircularProgress } from '@mui/material';
 
 const AddTeacher = () => {
-  const params = useParams()
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const params = useParams();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const subjectID = params.id
+  const subjectID = params.id;
 
-  const { status, response, error } = useSelector(state => state.user);
+  const { status, response, error } = useSelector((state) => state.user);
   const { subjectDetails } = useSelector((state) => state.sclass);
 
   useEffect(() => {
-    dispatch(getSubjectDetails(subjectID, "Subject"));
+    dispatch(getSubjectDetails(subjectID, 'Subject'));
   }, [dispatch, subjectID]);
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('')
+  const [password, setPassword] = useState('');
 
   const [showPopup, setShowPopup] = useState(false);
-  const [message, setMessage] = useState("");
-  const [loader, setLoader] = useState(false)
+  const [message, setMessage] = useState('');
+  const [loader, setLoader] = useState(false);
 
-  const role = "Teacher"
-  const school = subjectDetails && subjectDetails.school
-  const teachSubject = subjectDetails && subjectDetails._id
-  const teachSclass = subjectDetails && subjectDetails.sclassName && subjectDetails.sclassName._id
+  const role = 'Teacher';
+  const school = subjectDetails?.school;
+  const teachSubject = subjectDetails?._id;
+  const teachSclass = subjectDetails?.sclassName?._id;
 
-  const fields = { name, email, password, role, school, teachSubject, teachSclass }
+  const fields = {
+    name,
+    email,
+    password,
+    role,
+    school,
+    teachSubject,
+    teachSclass,
+  };
 
   const submitHandler = (event) => {
-    event.preventDefault()
-    setLoader(true)
-    dispatch(registerUser(fields, role))
-  }
+    event.preventDefault();
+    setLoader(true);
+    dispatch(registerUser(fields, role));
+  };
 
   useEffect(() => {
     if (status === 'added') {
-      dispatch(underControl())
-      navigate("/Admin/teachers")
-    }
-    else if (status === 'failed') {
-      setMessage(response)
-      setShowPopup(true)
-      setLoader(false)
-    }
-    else if (status === 'error') {
-      setMessage("Network Error")
-      setShowPopup(true)
-      setLoader(false)
+      dispatch(underControl());
+      navigate('/Admin/teachers');
+    } else if (status === 'failed') {
+      setMessage(response);
+      setShowPopup(true);
+      setLoader(false);
+    } else if (status === 'error') {
+      setMessage('Network Error');
+      setShowPopup(true);
+      setLoader(false);
     }
   }, [status, navigate, error, response, dispatch]);
 
   return (
-    <div>
-      <div className="register">
-        <form className="registerForm" onSubmit={submitHandler}>
-          <span className="registerTitle">Add Teacher</span>
-          <br />
-          <label>
-            Subject : {subjectDetails && subjectDetails.subName}
-          </label>
-          <label>
-            Class : {subjectDetails && subjectDetails.sclassName && subjectDetails.sclassName.sclassName}
-          </label>
-          <label>Name</label>
-          <input className="registerInput" type="text" placeholder="Enter teacher's name..."
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-            autoComplete="name" required />
+    <Box sx={{ display: 'flex', justifyContent: 'center', mt: 5 }}>
+      <Paper elevation={6} sx={{ p: 4, width: 450, borderRadius: 3 }}>
+        <Typography
+          variant="h5"
+          align="center"
+          fontWeight="bold"
+          gutterBottom
+          color="primary"
+        >
+          Add Teacher
+        </Typography>
 
-          <label>Email</label>
-          <input className="registerInput" type="email" placeholder="Enter teacher's email..."
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            autoComplete="email" required />
+        <Divider sx={{ my: 2 }} />
 
-          <label>Password</label>
-          <input className="registerInput" type="password" placeholder="Enter teacher's password..."
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            autoComplete="new-password" required />
+        {subjectDetails && (
+          <Stack spacing={1} sx={{ mb: 3 }}>
+            <Typography variant="subtitle1">
+              <strong>Subject:</strong> {subjectDetails.subName}
+            </Typography>
+            <Typography variant="subtitle1">
+              <strong>Class:</strong>{' '}
+              {subjectDetails?.sclassName?.sclassName}
+            </Typography>
+          </Stack>
+        )}
 
-          <button className="registerButton" type="submit" disabled={loader}>
-            {loader ? (
-              <CircularProgress size={24} color="inherit" />
-            ) : (
-              'Register'
-            )}
-          </button>
+        <form onSubmit={submitHandler}>
+          <Stack spacing={3}>
+            <TextField
+              label="Name"
+              variant="outlined"
+              fullWidth
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+
+            <TextField
+              label="Email"
+              variant="outlined"
+              type="email"
+              fullWidth
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+
+            <TextField
+              label="Password"
+              variant="outlined"
+              type="password"
+              fullWidth
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+
+            <Button
+              variant="contained"
+              color="primary"
+              type="submit"
+              fullWidth
+              disabled={loader}
+            >
+              {loader ? <CircularProgress size={24} color="inherit" /> : 'Register'}
+            </Button>
+          </Stack>
         </form>
-      </div>
-      <Popup message={message} setShowPopup={setShowPopup} showPopup={showPopup} />
-    </div>
-  )
-}
+      </Paper>
+      <Popup
+        message={message}
+        setShowPopup={setShowPopup}
+        showPopup={showPopup}
+      />
+    </Box>
+  );
+};
 
-export default AddTeacher
+export default AddTeacher;

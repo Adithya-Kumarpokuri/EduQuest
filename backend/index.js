@@ -10,8 +10,6 @@ const Routes = require("./routes/route.js");
 app.use(express.json());
 app.use(cors());
 require('dotenv').config();
-
-
 const PORT = process.env.PORT;
 app.use("/",Routes)
 const server = () => {

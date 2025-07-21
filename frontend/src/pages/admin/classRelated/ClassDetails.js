@@ -18,6 +18,19 @@ import SpeedDialTemplate from "../../../components/SpeedDialTemplate";
 import Popup from "../../../components/Popup";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PostAddIcon from '@mui/icons-material/PostAdd';
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  Stack,
+  Divider,
+  Button,
+} from '@mui/material';
+import ClassIcon from '@mui/icons-material/Class';
+import BookIcon from '@mui/icons-material/MenuBook';
+import GroupIcon from '@mui/icons-material/Group';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 
 const ClassDetails = () => {
     const params = useParams()
@@ -205,43 +218,97 @@ const ClassDetails = () => {
         )
     }
 
-    const ClassDetailsSection = () => {
-        const numberOfSubjects = subjectsList.length;
-        const numberOfStudents = sclassStudents.length;
+   const ClassDetailsSection = () => {
+  const navigate = useNavigate();
 
-        return (
-            <>
-                <Typography variant="h4" align="center" gutterBottom>
-                    Class Details
-                </Typography>
-                <Typography variant="h5" gutterBottom>
-                    This is Class {sclassDetails && sclassDetails.sclassName}
-                </Typography>
-                <Typography variant="h6" gutterBottom>
-                    Number of Subjects: {numberOfSubjects}
-                </Typography>
-                <Typography variant="h6" gutterBottom>
-                    Number of Students: {numberOfStudents}
-                </Typography>
-                {getresponse &&
-                    <GreenButton
-                        variant="contained"
-                        onClick={() => navigate("/Admin/class/addstudents/" + classID)}
-                    >
-                        Add Students
-                    </GreenButton>
-                }
-                {response &&
-                    <GreenButton
-                        variant="contained"
-                        onClick={() => navigate("/Admin/addsubject/" + classID)}
-                    >
-                        Add Subjects
-                    </GreenButton>
-                }
-            </>
-        );
-    }
+  const numberOfSubjects = subjectsList.length;
+  const numberOfStudents = sclassStudents.length;
+
+  return (
+    <Box sx={{ display: 'flex', justifyContent: 'center', mt: 5 }}>
+      <Card
+        sx={{
+          width: 500,
+          borderRadius: 3,
+          boxShadow: 5,
+          overflow: 'hidden',
+        }}
+      >
+        <CardHeader
+          avatar={<ClassIcon sx={{ color: 'white', fontSize: 40 }} />}
+          title={
+            <Typography variant="h5" sx={{ color: 'white', fontWeight: 'bold' }}>
+              Class Details
+            </Typography>
+          }
+          sx={{
+            background: 'linear-gradient(45deg, #8e2de2 30%, #4a00e0 90%)',
+            color: 'white',
+            p: 3,
+          }}
+        />
+
+        <CardContent sx={{ backgroundColor: '#f9f9f9' }}>
+          <Stack spacing={2}>
+            <Stack direction="row" spacing={2} alignItems="center">
+              <ClassIcon color="primary" />
+              <Typography variant="body1">
+                This is Class:{' '}
+                <strong>{sclassDetails?.sclassName}</strong>
+              </Typography>
+            </Stack>
+            <Divider />
+
+            <Stack direction="row" spacing={2} alignItems="center">
+              <BookIcon color="primary" />
+              <Typography variant="body1">
+                Number of Subjects:{' '}
+                <strong>{numberOfSubjects}</strong>
+              </Typography>
+            </Stack>
+            <Divider />
+
+            <Stack direction="row" spacing={2} alignItems="center">
+              <GroupIcon color="primary" />
+              <Typography variant="body1">
+                Number of Students:{' '}
+                <strong>{numberOfStudents}</strong>
+              </Typography>
+            </Stack>
+            <Divider />
+
+            <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mt: 3 }}>
+              {getresponse && (
+                <Button
+                  variant="contained"
+                  color="success"
+                  startIcon={<PersonAddIcon />}
+                  onClick={() =>
+                    navigate(`/Admin/class/addstudents/${classID}`)
+                  }
+                >
+                  Add Students
+                </Button>
+              )}
+              {response && (
+                <Button
+                  variant="contained"
+                  color="success"
+                  startIcon={<LibraryBooksIcon />}
+                  onClick={() =>
+                    navigate(`/Admin/addsubject/${classID}`)
+                  }
+                >
+                  Add Subjects
+                </Button>
+              )}
+            </Box>
+          </Stack>
+        </CardContent>
+      </Card>
+    </Box>
+  );
+};
 
     return (
         <>
@@ -256,7 +323,7 @@ const ClassDetails = () => {
                                     <Tab label="Details" value="1" />
                                     <Tab label="Subjects" value="2" />
                                     <Tab label="Students" value="3" />
-                                    <Tab label="Teachers" value="4" />
+                                    <Tab label="Teachers" value="4" /> 
                                 </TabList>
                             </Box>
                             <Container sx={{ marginTop: "3rem", marginBottom: "4rem" }}>

@@ -13,6 +13,21 @@ import InsertChartIcon from '@mui/icons-material/InsertChart';
 import InsertChartOutlinedIcon from '@mui/icons-material/InsertChartOutlined';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  Stack,
+  Divider,
+  Button,
+} from '@mui/material';
+import BookIcon from '@mui/icons-material/MenuBook';
+import CodeIcon from '@mui/icons-material/Code';
+import EventNoteIcon from '@mui/icons-material/EventNote';
+import GroupIcon from '@mui/icons-material/Group';
+import ClassIcon from '@mui/icons-material/Class';
+import PersonIcon from '@mui/icons-material/Person';
+import AddIcon from '@mui/icons-material/Add';
 
 const ViewSubject = () => {
   const navigate = useNavigate()
@@ -141,42 +156,105 @@ const ViewSubject = () => {
     )
   }
 
-  const SubjectDetailsSection = () => {
-    const numberOfStudents = sclassStudents.length;
+ const SubjectDetailsSection = () => {
+  const navigate = useNavigate();
 
-    return (
-      <>
-        <Typography variant="h4" align="center" gutterBottom>
-          Subject Details
-        </Typography>
-        <Typography variant="h6" gutterBottom>
-          Subject Name : {subjectDetails && subjectDetails.subName}
-        </Typography>
-        <Typography variant="h6" gutterBottom>
-          Subject Code : {subjectDetails && subjectDetails.subCode}
-        </Typography>
-        <Typography variant="h6" gutterBottom>
-          Subject Sessions : {subjectDetails && subjectDetails.sessions}
-        </Typography>
-        <Typography variant="h6" gutterBottom>
-          Number of Students: {numberOfStudents}
-        </Typography>
-        <Typography variant="h6" gutterBottom>
-          Class Name : {subjectDetails && subjectDetails.sclassName && subjectDetails.sclassName.sclassName}
-        </Typography>
-        {subjectDetails && subjectDetails.teacher ?
-          <Typography variant="h6" gutterBottom>
-            Teacher Name : {subjectDetails.teacher.name}
-          </Typography>
-          :
-          <GreenButton variant="contained"
-            onClick={() => navigate("/Admin/teachers/addteacher/" + subjectDetails._id)}>
-            Add Subject Teacher
-          </GreenButton>
-        }
-      </>
-    );
-  }
+  const numberOfStudents = sclassStudents.length;
+
+  return (
+    <Box sx={{ display: 'flex', justifyContent: 'center', mt: 5 }}>
+      <Card
+        sx={{
+          width: 500,
+          borderRadius: 3,
+          boxShadow: 5,
+          overflow: 'hidden',
+        }}
+      >
+        <CardHeader
+          avatar={<BookIcon sx={{ color: 'white', fontSize: 40 }} />}
+          title={
+            <Typography variant="h5" sx={{ color: 'white', fontWeight: 'bold' }}>
+              Subject Details
+            </Typography>
+          }
+          sx={{
+            background: 'linear-gradient(45deg, #00b09b 30%, #96c93d 90%)',
+            color: 'white',
+            p: 3,
+          }}
+        />
+
+        <CardContent sx={{ backgroundColor: '#f9f9f9' }}>
+          <Stack spacing={2}>
+            <Stack direction="row" spacing={2} alignItems="center">
+              <BookIcon color="primary" />
+              <Typography variant="body1">
+                Subject Name: <strong>{subjectDetails?.subName}</strong>
+              </Typography>
+            </Stack>
+            <Divider />
+
+            <Stack direction="row" spacing={2} alignItems="center">
+              <CodeIcon color="primary" />
+              <Typography variant="body1">
+                Subject Code: <strong>{subjectDetails?.subCode}</strong>
+              </Typography>
+            </Stack>
+            <Divider />
+
+            <Stack direction="row" spacing={2} alignItems="center">
+              <EventNoteIcon color="primary" />
+              <Typography variant="body1">
+                Sessions: <strong>{subjectDetails?.sessions}</strong>
+              </Typography>
+            </Stack>
+            <Divider />
+
+            <Stack direction="row" spacing={2} alignItems="center">
+              <GroupIcon color="primary" />
+              <Typography variant="body1">
+                Number of Students: <strong>{numberOfStudents}</strong>
+              </Typography>
+            </Stack>
+            <Divider />
+
+            <Stack direction="row" spacing={2} alignItems="center">
+              <ClassIcon color="primary" />
+              <Typography variant="body1">
+                Class: <strong>{subjectDetails?.sclassName?.sclassName}</strong>
+              </Typography>
+            </Stack>
+            <Divider />
+
+            {subjectDetails?.teacher ? (
+              <Stack direction="row" spacing={2} alignItems="center">
+                <PersonIcon color="primary" />
+                <Typography variant="body1">
+                  Teacher Name: <strong>{subjectDetails.teacher.name}</strong>
+                </Typography>
+              </Stack>
+            ) : (
+              <Box sx={{ textAlign: 'center', mt: 3 }}>
+                <Button
+                  variant="contained"
+                  startIcon={<AddIcon />}
+                  sx={{ backgroundColor: '#4caf50' }}
+                  onClick={() =>
+                    navigate(`/Admin/teachers/addteacher/${subjectDetails?._id}`)
+                  }
+                >
+                  Add Subject Teacher
+                </Button>
+              </Box>
+            )}
+          </Stack>
+        </CardContent>
+      </Card>
+    </Box>
+  );
+};
+
 
   return (
     <>

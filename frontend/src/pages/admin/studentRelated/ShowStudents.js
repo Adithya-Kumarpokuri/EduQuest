@@ -46,7 +46,8 @@ const ShowStudents = () => {
     const deleteHandler = (deleteID, address) => {
         console.log(deleteID);
         console.log(address);
-        setMessage("Sorry the delete function has been disabled for now.")
+        // setMessage("Sorry the delete function has been disabled for now.")
+        dispatch(deleteUser(deleteID,address));
         setShowPopup(true)
 
     }
@@ -203,7 +204,7 @@ const ShowStudents = () => {
                     }
                 </>
             }
-            <Popup message={message} setShowPopup={setShowPopup} showPopup={showPopup} />
+            {/* <Popup message={message} setShowPopup={setShowPopup} showPopup={showPopup} /> */}
         </>
     );
 };

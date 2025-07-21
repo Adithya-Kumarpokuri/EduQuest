@@ -79,11 +79,13 @@ const ShowClasses = () => {
 
   const ActionMenu = ({ actions }) => {
     const [anchorEl, setAnchorEl] = useState(null);
-
+     
     const open = Boolean(anchorEl);
 
     const handleClick = (event) => {
       setAnchorEl(event.currentTarget);
+      console.log("anchor",anchorEl)
+
     };
     const handleClose = () => {
       setAnchorEl(null);
